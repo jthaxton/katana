@@ -18,7 +18,16 @@ curl -X 'POST' \
   -H 'Content-Type: multipart/form-data' \
   --output ./output.zip
 ```
+This will slice a video into png screenshots.
+Grab a coffee. Take a walk. This part might take a few minutes.
+
+```
+curl -X 'GET' \
+  'http://0.0.0.0:8080/video?name=<some_youtube_link>' \
+  -H 'Content-Type: application/json'
+```
+This will download a video from youtube.
 Grab a coffee. Take a walk. This part might take a few minutes.
 
 ## Downsides
-For a random 10 second video, it returned ~700MB (compressed) of png files. In the future, I will include a body param to configure frequency of slices.
+For a random 10 second video, `/parse` returned ~700MB (compressed) of png files. In the future, I will include a body param to configure frequency of slices.
