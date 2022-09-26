@@ -20,6 +20,7 @@ import (
 	"time"
 
 	"github.com/3d0c/gmf"
+	// "github.com/kkdai/youtube/v2"
 )
 
 var (
@@ -28,6 +29,12 @@ var (
 	fileCount int
 )
 
+// func getVideo(url string) {
+// 	// httpClient := http.Client{}
+// 	client := youtube.Client{}
+	
+// }
+
 func parse(fileName string, movieName string) {
 	var (
 		srcFileName string
@@ -35,9 +42,6 @@ func parse(fileName string, movieName string) {
 	)
 	srcFileName = "./tmp/video.mp4"
 	extention  = "png"
-	// flag.StringVar(&srcFileName, "src", "./tmp/video.mp4", "source video")
-	// flag.StringVar(&extention, "ext", "png", "destination type, e.g.: png, jpg, tiff, whatever encoder you have")
-	// flag.Parse()
 
 	outFile := fmt.Sprintf("./tmp/%s", movieName)
 	os.MkdirAll(outFile, 0755)

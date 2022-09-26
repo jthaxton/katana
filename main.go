@@ -9,5 +9,6 @@ func main() {
 		handler := Handler{}
 
 		r.POST("/parse", handler.HandleParseVideo)
+		r.GET("/video", handler.HandleGetVideo)
 		r.Run()
 }

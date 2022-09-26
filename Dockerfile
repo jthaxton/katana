@@ -6,6 +6,9 @@ RUN cd FFmpeg && ./configure --prefix=/usr/local/ffmpeg --enable-shared --enable
 ENV PKG_CONFIG_PATH=/usr/local/ffmpeg/lib/pkgconfig/
 RUN echo "include ld.so.conf.d/*.conf \n /usr/lib \n /usr/local/lib \n /usr/local/ffmpeg/lib" >> /etc/ld.so.conf
 RUN ldconfig
+
+# RUN youtube-dl
+
 WORKDIR /src
 ADD . .
 RUN go mod download

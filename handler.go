@@ -4,13 +4,67 @@ import (
 	"mime/multipart"
 	"fmt"
 	"strings"
+	"os"
+	"io"
+	"net/url"
 
+	"github.com/kkdai/youtube/v2"
 	"github.com/gin-gonic/gin"
 )
 
 type Handler struct{}
 type Form struct {
 	File *multipart.FileHeader `form:"file" binding:"required"`
+}
+
+func (handler *Handler) HandleGetVideo(ctx *gin.Context) {
+	u := ctx.Query("name")
+	if len(u) == 0 {
+		ctx.JSON(403,map[string]string{"error":"youtubeId not found."})
+		return
+	}
+	parsed, err := url.Parse(u)
+	if err != nil {
+		ctx.JSON(403,map[string]string{"error":err.Error()})
+		return
+	}
+
+	query := parsed.Query()
+	videoID := query.Get("v")
+	if len(videoID) == 0 {
+		ctx.JSON(403,map[string]string{"error":"video id not found."})
+		return
+	}
+	// videoID := "BaW_jenozKc"
+	client := youtube.Client{}
+	fmt.Println("ID is " + videoID)
+	video, err := client.GetVideo(videoID)
+	if err != nil {
+		ctx.JSON(403,map[string]string{"error": err.Error()})
+		return
+	}
+
+	formats := video.Formats.WithAudioChannels() // only get videos with audio
+	stream, _, err := client.GetStream(video, &formats[0])
+	if err != nil {
+		ctx.JSON(403,map[string]string{"error": err.Error()})
+		return
+	}
+
+	file, err := os.Create("video.mp4")
+	if err != nil {
+		ctx.JSON(403,map[string]string{"error": err.Error()})
+		return
+	}
+	defer file.Close()
+
+	_, err = io.Copy(file, stream)
+	if err != nil {
+		ctx.JSON(403,map[string]string{"error":err.Error()})
+		return
+	}
+	ctx.JSON(403,map[string]string{"done": "true"})
+
 }
 
 func (handler *Handler) HandleParseVideo(ctx *gin.Context) {
