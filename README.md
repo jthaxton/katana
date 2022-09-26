@@ -24,7 +24,8 @@ Grab a coffee. Take a walk. This part might take a few minutes.
 ```
 curl -X 'GET' \
   'http://0.0.0.0:8080/video?name=<some_youtube_link>' \
-  -H 'Content-Type: application/json'
+  -H 'Content-Type: multipart/form-data' \
+  --output ./output.zip
 ```
 This will download a video from youtube.
 Grab a coffee. Take a walk. This part might take a few minutes.

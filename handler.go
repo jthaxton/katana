@@ -51,7 +51,7 @@ func (handler *Handler) HandleGetVideo(ctx *gin.Context) {
 		return
 	}
 
-	file, err := os.Create("video.mp4")
+	file, err := os.Create("./tmp/vid.mp4")
 	if err != nil {
 		ctx.JSON(403,map[string]string{"error": err.Error()})
 		return
@@ -63,8 +63,21 @@ func (handler *Handler) HandleGetVideo(ctx *gin.Context) {
 		ctx.JSON(403,map[string]string{"error":err.Error()})
 		return
 	}
-	ctx.JSON(403,map[string]string{"done": "true"})
+	parsedFilename := videoID
 
+	fmt.Println("Parsing " + parsedFilename)
+	zipPath := fmt.Sprintf("./tmp/%s", parsedFilename)
+
+	parse("./tmp/vid.mp4", parsedFilename)
+	if err := zipSource(zipPath, "output.zip"); err != nil {
+		ctx.JSON(403, map[string]string{"error": err.Error()})
+	}
+	
+	if err != nil {
+		ctx.JSON(403, map[string]string{"error": err.Error()})
+	}
+	ctx.File("./output.zip")
+	Cleanup(zipPath)
 }
 
 func (handler *Handler) HandleParseVideo(ctx *gin.Context) {
@@ -76,7 +89,7 @@ func (handler *Handler) HandleParseVideo(ctx *gin.Context) {
 	}
 	parsedFilename := strings.Split(form.File.Filename, ".mp4")[0]
 	zipPath := fmt.Sprintf("./tmp/%s", parsedFilename)
-	// Cleanup(zipPath)
+
 	fmt.Println("Saving video to /tmp/")
 	err = ctx.SaveUploadedFile(form.File, "./tmp/vid.mp4")
 	if err != nil {
@@ -91,6 +104,6 @@ func (handler *Handler) HandleParseVideo(ctx *gin.Context) {
 	if err != nil {
 		ctx.JSON(403, map[string]string{"error": err.Error()})
 	}
-	Cleanup(zipPath)
 	ctx.File("./output.zip")
+	Cleanup(zipPath)
 }
