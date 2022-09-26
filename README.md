@@ -27,7 +27,7 @@ curl -X 'GET' \
   -H 'Content-Type: multipart/form-data' \
   --output ./output.zip
 ```
-This will download a video from youtube.
+This will download a video from youtube. And parse it to png and zip it. Returns a zip file.
 Grab a coffee. Take a walk. This part might take a few minutes.
 
 ## Downsides
